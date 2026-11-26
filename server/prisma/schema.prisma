@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UsuarioAdmin {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  email    String   @unique
+  password String
+  creadoEn DateTime @default(now())
+}
+
+model Conocimiento {
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  categoria   String   // "Servicios", "Planes", "Soporte", "Empresa", "Documento", "Confidencial"
+  contenido   String   @db.Text
+  urlGuia     String?  // Ruta pública opcional: "/", "/servicios", "/planes", "/soporte", "/cotizar"
+  fuente      String   @default("manual") // "manual", "pdf", "txt"
+  esPublico   Boolean  @default(true)
+  creadoEn    DateTime @default(now())
+  actualizado DateTime @updatedAt
+}
+
+model ReglaRestriccion {
+  id          Int      @id @default(autoincrement())
+  descripcion String   @db.Text
+  activa      Boolean  @default(true)
+  creadoEn    DateTime @default(now())
+}
+
+model Conversacion {
+  id       String    @id @default(uuid())
+  creadaEn DateTime  @default(now())
+  mensajes Mensaje[]
+}
+
+model Mensaje {
+  id             Int          @id @default(autoincrement())
+  rol            String       // "user" o "model"
+  texto          String       @db.Text
+  rutaSugerida   String?
+  conversacionId String
+  conversacion   Conversacion @relation(fields: [conversacionId], references: [id], onDelete: Cascade)
+  creadoEn       DateTime     @default(now())
+}
+
+model SolicitudContacto {
+  id        Int      @id @default(autoincrement())
+  tipo      String   // "SOPORTE" o "COTIZACION"
+  nombre    String
+  email     String
+  telefono  String?
+  empresa   String?
+  asunto    String
+  mensaje   String   @db.Text
+  estado    String   @default("PENDIENTE") // "PENDIENTE", "EN_PROCESO", "RESUELTO"
+  creadoEn  DateTime @default(now())
+}

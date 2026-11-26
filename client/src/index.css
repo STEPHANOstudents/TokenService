@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ivory: #FDFBF7;
+    --color-sand: #F7F1E3;
+    --color-gold-border: #EBDCC0;
+    --color-amber-primary: #D97706;
+    --color-bronze-accent: #92400E;
+  }
+
+  body {
+    background-color: #FDFBF7;
+    color: #1C1917;
+  }
+}
